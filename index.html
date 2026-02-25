@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJ Collection | Maji Collection - Redefining Elegance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        luxury: {
+                            black: '#0a0a0a',
+                            charcoal: '#1a1a1a',
+                            gold: '#d4af37',
+                            cream: '#f5f5f0',
+                            muted: '#888888'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            overflow-x: hidden;
+            background-color: #0a0a0a;
+            color: #f5f5f0;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-dark {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gold-glow {
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+        
+        .hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .smooth-scroll-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .product-card {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+        }
+        
+        .magnetic-btn {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .line-reveal {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        .cursor-glow {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%);
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
+        }
+        
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loader-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            letter-spacing: 0.5em;
+            color: #d4af37;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #d4af37, #f4e5c2);
+            z-index: 10001;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+        
+        .parallax-layer {
+            will-change: transform;
+        }
+        
+        .collection-item {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .collection-item:hover .collection-overlay {
+            opacity: 1;
+        }
+        
+        .collection-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .nav-link {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: #d4af37;
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            transform: translateX(0);
+        }
+        
+        .theme-toggle {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+        }
+        
+        .cart-drawer {
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .cart-drawer.open {
+            transform: translateX(0);
+        }
+        
+        .size-btn {
+            transition: all 0.3s;
+        }
+        
+        .size-btn:hover, .size-btn.active {
+            background: #d4af37;
+            color: #0a0a0a;
+            border-color: #d4af37;
+        }
+        
+        .add-to-cart {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .add-to-cart::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .add-to-cart:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-luxury-gold selection:text-luxury-black">
+
+    <!-- Grain Overlay -->
+    <div class="grain"></div>
+    
+    <!-- Cursor Glow -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="mb-8">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-spin-slow">
+                <circle cx="40" cy="40" r="35" stroke="#d4af37" stroke-width="1" stroke-dasharray="4 4"/>
+                <circle cx="40" cy="40" r="25" stroke="#d4af37" stroke-width="1" opacity="0.5"/>
+                <text x="40" y="45" text-anchor="middle" fill="#d4af37" font-family="Cormorant Garamond" font-size="20" font-weight="600">MJ</text>
+            </svg>
+        </div>
+        <div class="loader-text">MAJI COLLECTION</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 transition-all duration-500" id="navbar">
+        <div class="glass-dark px-6 lg:px-12 py-4">
+            <div class="flex justify-between items-center max-w-7xl mx-auto">
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 border border-luxury-gold rounded-full flex items-center justify-center group-hover:bg-luxury-gold transition-colors duration-300">
+                        <span class="font-serif text-luxury-gold group-hover:text-luxury-black font-semibold text-lg transition-colors">MJ</span>
+                    </div>
+                    <div class="hidden sm:block">
+                        <h1 class="font-serif text-xl tracking-widest text-luxury-cream">MAJI COLLECTION</h1>
+                        <p class="text-[10px] tracking-[0.3em] text-luxury-muted uppercase">Est. 2024</p>
+                    </div>
+                </a>
+                
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#collections" class="nav-link text-sm tracking-widest uppercase text-luxury-cream hover:text-luxury-gold transition-colors">Collections</a>
+                    <a href="#boutique" class="nav-link text-sm tracking-widest uppercase text-luxury-cream hover:text-luxury-gold transition-colors">Boutique</a>
+                    <a href="#atelier" class="nav-link text-sm tracking-widest uppercase text-luxury-cream hover:text-luxury-gold transition-colors">Atelier</a>
+                    <a href="#journal" class="nav-link text-sm tracking-widest uppercase text-luxury-cream hover:text-luxury-gold transition-colors">Journal</a>
+                </div>
+                
+                <div class="flex items-center gap-6">
+                    <button onclick="toggleTheme()" class="theme-toggle text-luxury-cream hover:text-luxury-gold transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
+                    <button onclick="toggleCart()" class="relative text-luxury-cream hover:text-luxury-gold transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        <span class="absolute -top-2 -right-2 w-5 h-5 bg-luxury-gold text-luxury-black text-xs rounded-full flex items-center justify-center font-semibold" id="cartCount">0</span>
+                    </button>
+                    <button class="md:hidden text-luxury-cream" onclick="toggleMobileMenu()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="fixed inset-0 bg-luxury-black z-40 transform translate-x-full transition-transform duration-500" id="mobileMenu">
+        <div class="flex flex-col items-center justify-center h-full gap-8">
+            <a href="#collections" class="font-serif text-3xl text-luxury-cream hover:text-luxury-gold transition-colors" onclick="toggleMobileMenu()">Collections</a>
+            <a href="#boutique" class="font-serif text-3xl text-luxury-cream hover:text-luxury-gold transition-colors" onclick="toggleMobileMenu()">Boutique</a>
+            <a href="#atelier" class="font-serif text-3xl text-luxury-cream hover:text-luxury-gold transition-colors" onclick="toggleMobileMenu()">Atelier</a>
+            <a href="#journal" class="font-serif text-3xl text-luxury-cream hover:text-luxury-gold transition-colors" onclick="toggleMobileMenu()">Journal</a>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="fixed inset-0 z-50 pointer-events-none" id="cartOverlay">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-500" onclick="toggleCart()"></div>
+        <div class="cart-drawer absolute right-0 top-0 h-full w-full max-w-md bg-luxury-charcoal border-l border-luxury-gold/20 pointer-events-auto flex flex-col">
+            <div class="p-6 border-b border-luxury-gold/20 flex justify-between items-center">
+                <h2 class="font-serif text-2xl text-luxury-cream">Your Selection</h2>
+                <button onclick="toggleCart()" class="text-luxury-muted hover:text-luxury-cream transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6" id="cartItems">
+                <div class="text-center text-luxury-muted mt-20">
+                    <p class="font-serif text-lg italic">Your cart is empty</p>
+                    <p class="text-sm mt-2">Discover our latest collections</p>
+                </div>
+            </div>
+            <div class="p-6 border-t border-luxury-gold/20">
+                <div class="flex justify-between mb-4 text-luxury-cream">
+                    <span class="font-serif text-lg">Subtotal</span>
+                    <span class="font-serif text-xl text-luxury-gold" id="cartTotal">$0.00</span>
+                </div>
+                <button class="w-full py-4 bg-luxury-gold text-luxury-black font-semibold tracking-widest uppercase hover:bg-white transition-colors duration-300">
+                    Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen w-full overflow-hidden flex items-center justify-center">
+        <canvas id="heroCanvas" class="hero-canvas"></canvas>
+        
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-luxury-black/20 to-luxury-black pointer-events-none"></div>
+        
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <div class="mb-6 overflow-hidden">
+                <p class="text-luxury-gold tracking-[0.5em] text-sm uppercase transform translate-y-full" id="heroSubtitle">Est. 2024</p>
+            </div>
+            <h1 class="font-serif text-6xl md:text-8xl lg:text-9xl text-luxury-cream mb-8 leading-none" id="heroTitle">
+                <span class="block overflow-hidden">
+                    <span class="block transform translate-y-full">MJ</span>
+                </span>
+                <span class="block overflow-hidden">
+                    <span class="block transform translate-y-full text-gradient">COLLECTION</span>
+                </span>
+            </h1>
+            <div class="overflow-hidden mb-12">
+                <p class="font-serif text-xl md:text-2xl text-luxury-muted italic transform translate-y-full" id="heroTagline">"Redefining Elegance"</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center opacity-0" id="heroCTA">
+                <a href="#collections" class="magnetic-btn group relative px-10 py-4 border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-luxury-black transition-all duration-300 overflow-hidden">
+                    <span class="relative z-10 tracking-widest text-sm uppercase font-semibold">Explore Collection</span>
+                    <div class="absolute inset-0 bg-luxury-gold transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                </a>
+                <a href="#boutique" class="magnetic-btn px-10 py-4 text-luxury-cream hover:text-luxury-gold transition-colors tracking-widest text-sm uppercase">
+                    View Lookbook
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Featured Collection -->
+    <section id="collections" class="relative py-32 px-6 lg:px-12 bg-luxury-black">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col lg:flex-row justify-between items-end mb-20">
+                <div class="max-w-2xl">
+                    <p class="text-luxury-gold tracking-widest text-sm uppercase mb-4">The Collection</p>
+                    <h2 class="font-serif text-5xl md:text-6xl text-luxury-cream mb-6">Autumn / Winter 2024</h2>
+                    <p class="text-luxury-muted text-lg leading-relaxed">A curated selection of bespoke tailoring and avant-garde silhouettes, crafted for the modern connoisseur.</p>
+                </div>
+                <a href="#" class="hidden lg:flex items-center gap-2 text-luxury-gold hover:gap-4 transition-all mt-6 lg:mt-0">
+                    <span class="tracking-widest text-sm uppercase">View All</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Product 1 -->
+                <div class="product-card group cursor-pointer" onclick="openProductModal('Imperial Overcoat', 2850, 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&q=80&w=800')">
+                    <div class="relative overflow-hidden bg-luxury-charcoal aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&q=80&w=800" alt="Imperial Overcoat" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-3 border border-luxury-gold text-luxury-gold tracking-widest text-xs uppercase backdrop-blur-sm">View in 3D</span>
+                        </div>
+                        <div class="absolute top-4 right-4">
+                            <span class="px-3 py-1 bg-luxury-gold text-luxury-black text-xs font-semibold tracking-wider">NEW</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-serif text-xl text-luxury-cream mb-1 group-hover:text-luxury-gold transition-colors">Imperial Overcoat</h3>
+                            <p class="text-luxury-muted text-sm">Italian Wool Blend</p>
+                        </div>
+                        <span class="font-serif text-lg text-luxury-gold">$2,850</span>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card group cursor-pointer lg:mt-20" onclick="openProductModal('Sovereign Suit', 4200, 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80&w=800')">
+                    <div class="relative overflow-hidden bg-luxury-charcoal aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80&w=800" alt="Sovereign Suit" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-3 border border-luxury-gold text-luxury-gold tracking-widest text-xs uppercase backdrop-blur-sm">View in 3D</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-serif text-xl text-luxury-cream mb-1 group-hover:text-luxury-gold transition-colors">Sovereign Suit</h3>
+                            <p class="text-luxury-muted text-sm">Hand-Tailored Silk</p>
+                        </div>
+                        <span class="font-serif text-lg text-luxury-gold">$4,200</span>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card group cursor-pointer" onclick="openProductModal('Velvet Evening Gown', 3800, 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&q=80&w=800')">
+                    <div class="relative overflow-hidden bg-luxury-charcoal aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&q=80&w=800" alt="Velvet Evening Gown" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-3 border border-luxury-gold text-luxury-gold tracking-widest text-xs uppercase backdrop-blur-sm">View in 3D</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-serif text-xl text-luxury-cream mb-1 group-hover:text-luxury-gold transition-colors">Velvet Evening Gown</h3>
+                            <p class="text-luxury-muted text-sm">Midnight Blue Velvet</p>
+                        </div>
+                        <span class="font-serif text-lg text-luxury-gold">$3,800</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D Showcase Section -->
+    <section class="relative py-32 bg-luxury-charcoal overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(212,175,55,0.3) 1px, transparent 0); background-size: 40px 40px;"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-luxury-gold/20 blur-3xl rounded-full"></div>
+                        <div class="relative glass p-8 rounded-sm">
+                            <div id="product3D" class="w-full h-[500px] bg-luxury-black/50 rounded-sm flex items-center justify-center overflow-hidden relative">
+                                <canvas id="productCanvas"></canvas>
+                                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
+                                    <button class="w-10 h-10 rounded-full border border-luxury-gold/30 flex items-center justify-center hover:bg-luxury-gold/20 transition-colors" onclick="rotateProduct('left')">
+                                        <svg class="w-5 h-5 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+                                        </svg>
+                                    </button>
+                                    <button class="w-10 h-10 rounded-full border border-luxury-gold/30 flex items-center justify-center hover:bg-luxury-gold/20 transition-colors" onclick="rotateProduct('right')">
+                                        <svg class="w-5 h-5 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="absolute top-4 right-4">
+                                    <span class="text-xs text-luxury-gold tracking-widest uppercase border border-luxury-gold/30 px-3 py-1 rounded-full">360° View</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-1 lg:order-2">
+                    <p class="text-luxury-gold tracking-widest text-sm uppercase mb-4">Interactive Experience</p>
+                    <h2 class="font-serif text-5xl md:text-6xl text-luxury-cream mb-6">The Atelier</h2>
+                    <p class="text-luxury-muted text-lg leading-relaxed mb-8">
+                        Experience our craftsmanship in unprecedented detail. Rotate, zoom, and inspect every stitch of our bespoke garments through our revolutionary 3D viewer.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full border border-luxury-gold/30 flex items-center justify-center">
+                                <span class="text-luxury-gold font-serif">01</span>
+                            </div>
+                            <div>
+                                <h4 class="text-luxury-cream font-semibold">Photorealistic Rendering</h4>
+                                <p class="text-luxury-muted text-sm">Unreal Engine 5 powered visualization</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full border border-luxury-gold/30 flex items-center justify-center">
+                                <span class="text-luxury-gold font-serif">02</span>
+                            </div>
+                            <div>
+                                <h4 class="text-luxury-cream font-semibold">Fabric Simulation</h4>
+                                <p class="text-luxury-muted text-sm">Real-time physics-based draping</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full border border-luxury-gold/30 flex items-center justify-center">
+                                <span class="text-luxury-gold font-serif">03</span>
+                            </div>
+                            <div>
+                                <h4 class="text-luxury-cream font-semibold">Custom Fitting</h4>
+                                <p class="text-luxury-muted text-sm">AI-powered size recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="px-8 py-4 bg-luxury-gold text-luxury-black font-semibold tracking-widest uppercase hover:bg-white transition-colors duration-300">
+                        Try Virtual Fitting
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="atelier" class="relative py-32 px-6 lg:px-12 bg-luxury-black">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="relative">
+                    <div class="aspect-[4/5] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=800" alt="Atelier" class="w-full h-full object-cover parallax-layer" data-speed="0.5">
+                    </div>
+                    <div class="absolute -bottom-8 -right-8 w-64 h-64 border border-luxury-gold/30 -z-10"></div>
+                    <div class="absolute -top-8 -left-8 w-64 h-64 bg-luxury-gold/5 -z-10"></div>
+                </div>
+                
+                <div class="lg:pl-12">
+                    <p class="text-luxury-gold tracking-widest text-sm uppercase mb-4">Heritage</p>
+                    <h2 class="font-serif text-5xl md:text-6xl text-luxury-cream mb-8">The House of Maji</h2>
+                    <div class="space-y-6 text-luxury-muted text-lg leading-relaxed">
+                        <p>
+                            Founded in the heart of Milan, MJ Collection represents the pinnacle of sartorial excellence. Each garment is a testament to our unwavering commitment to craftsmanship, innovation, and timeless elegance.
+                        </p>
+                        <p>
+                            Our atelier brings together master tailors with decades of experience and cutting-edge technology, creating pieces that transcend seasons and trends. From the initial sketch to the final stitch, every detail is meticulously considered.
+                        </p>
+                        <p class="font-serif text-xl text-luxury-cream italic border-l-2 border-luxury-gold pl-6">
+                            "True luxury is not about excess, but about the perfection of details invisible to the untrained eye."
+                        </p>
+                    </div>
+                    <div class="mt-10 flex gap-8">
+                        <div>
+                            <span class="block font-serif text-4xl text-luxury-gold">25+</span>
+                            <span class="text-sm text-luxury-muted tracking-wider uppercase">Master Artisans</span>
+                        </div>
+                        <div>
+                            <span class="block font-serif text-4xl text-luxury-gold">100%</span>
+                            <span class="text-sm text-luxury-muted tracking-wider uppercase">Bespoke</span>
+                        </div>
+                        <div>
+                            <span class="block font-serif text-4xl text-luxury-gold">48h</span>
+                            <span class="text-sm text-luxury-muted tracking-wider uppercase">Global Delivery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="py-32 px-6 lg:px-12 bg-luxury-black">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20">
+                <p class="text-luxury-gold tracking-widest text-sm uppercase mb-4">Moments</p>
+                <h2 class="font-serif text-5xl md:text-6xl text-luxury-cream">The Journal</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[300px]">
+                <div class="collection-item relative overflow-hidden row-span-2 cursor-pointer group">
+                    <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700" alt="Fashion">
+                    <div class="collection-overlay absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-luxury-cream font-serif text-xl italic">Runway 2024</span>
+                    </div>
+                </div>
+                <div class="collection-item relative overflow-hidden cursor-pointer group">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700" alt="Fashion">
+                    <div class="collection-overlay absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-luxury-cream font-serif text-lg italic">Details</span>
+                    </div>
+                </div>
+                <div class="collection-item relative overflow-hidden row-span-2 cursor-pointer group">
+                    <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700" alt="Fashion">
+                    <div class="collection-overlay absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-luxury-cream font-serif text-xl italic">Campaign</span>
+                    </div>
+                </div>
+                <div class="collection-item relative overflow-hidden cursor-pointer group">
+                    <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700" alt="Fashion">
+                    <div class="collection-overlay absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-luxury-cream font-serif text-lg italic">Street Style</span>
+                    </div>
+                </div>
+                <div class="collection-item relative overflow-hidden cursor-pointer group">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700" alt="Fashion">
+                    <div class="collection-overlay absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-luxury-cream font-serif text-lg italic">Behind Scenes</span>
+                    </div>
+                </div>
+                <div class="collection-item relative overflow-hidden cursor-pointer group">
+                    <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700" alt="Fashion">
+                    <div class="collection-overlay absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-luxury-cream font-serif text-lg italic">Accessories</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-32 px-6 lg:px-12 bg-luxury-charcoal relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-luxury-gold/20 to-transparent"></div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <p class="text-luxury-gold tracking-widest text-sm uppercase mb-4">Join the Inner Circle</p>
+            <h2 class="font-serif text-5xl md:text-6xl text-luxury-cream mb-6">Be the First</h2>
+            <p class="text-luxury-muted text-lg mb-10 max-w-2xl mx-auto">
+                Subscribe to receive exclusive access to private viewings, limited editions, and personalized styling consultations.
+            </p>
+            
+            <form class="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto" onsubmit="handleSubscribe(event)">
+                <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-4 bg-luxury-black border border-luxury-gold/30 text-luxury-cream placeholder-luxury-muted focus:outline-none focus:border-luxury-gold transition-colors" required>
+                <button type="submit" class="px-8 py-4 bg-luxury-gold text-luxury-black font-semibold tracking-widest uppercase hover:bg-white transition-colors duration-300">
+                    Subscribe
+                </button>
+            </form>
+            
+            <p class="text-luxury-muted text-xs mt-6 tracking-wider">By subscribing, you agree to our Privacy Policy and consent to receive updates from MJ Collection.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-luxury-black border-t border-luxury-gold/10 pt-20 pb-10 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 border border-luxury-gold rounded-full flex items-center justify-center">
+                            <span class="font-serif text-luxury-gold font-semibold text-xl">MJ</span>
+                        </div>
+                        <div>
+                            <h3 class="font-serif text-lg tracking-widest text-luxury-cream">MAJI COLLECTION</h3>
+                        </div>
+                    </div>
+                    <p class="text-luxury-muted text-sm leading-relaxed mb-6">
+                        Redefining elegance through timeless design and uncompromising craftsmanship.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-luxury-gold/30 flex items-center justify-center text-luxury-muted hover:text-luxury-gold hover:border-luxury-gold transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-luxury-gold/30 flex items-center justify-center text-luxury-muted hover:text-luxury-gold hover:border-luxury-gold transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-luxury-cream font-semibold tracking-widest uppercase text-sm mb-6">Boutique</h4>
+                    <ul class="space-y-3 text-luxury-muted text-sm">
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Women</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Men</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Accessories</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Gift Cards</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-luxury-cream font-semibold tracking-widest uppercase text-sm mb-6">Client Services</h4>
+                    <ul class="space-y-3 text-luxury-muted text-sm">
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Shipping & Returns</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Size Guide</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Care Instructions</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Book Appointment</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-luxury-cream font-semibold tracking-widest uppercase text-sm mb-6">Legal</h4>
+                    <ul class="space-y-3 text-luxury-muted text-sm">
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-luxury-gold transition-colors">Accessibility</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-luxury-gold/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-luxury-muted text-xs tracking-wider">© 2024 MJ Collection. All rights reserved.</p>
+                <div class="flex gap-6 text-luxury-muted text-xs tracking-wider">
+                    <span>Milan</span>
+                    <span>Paris</span>
+                    <span>New York</span>
+                    <span>Tokyo</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeProductModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-6">
+            <div class="bg-luxury-charcoal w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-sm border border-luxury-gold/20">
+                <div class="grid lg:grid-cols-2 gap-0">
+                    <div class="relative aspect-square bg-luxury-black">
+                        <img id="modalImage" src="" alt="" class="w-full h-full object-cover">
+                        <button onclick="closeProductModal()" class="absolute top-4 right-4 w-10 h-10 bg-luxury-black/80 rounded-full flex items-center justify-center text-luxury-cream hover:text-luxury-gold transition-colors lg:hidden">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-8 lg:p-12 flex flex-col">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-luxury-gold tracking-widest text-xs uppercase mb-2">Exclusive</p>
+                                <h2 id="modalTitle" class="font-serif text-4xl text-luxury-cream mb-2"></h2>
+                                <p class="text-luxury-muted">Italian Craftsmanship</p>
+                            </div>
+                            <button onclick="closeProductModal()" class="hidden lg:block text-luxury-muted hover:text-luxury-cream transition-colors">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="mb-8">
+                            <span id="modalPrice" class="font-serif text-3xl text-luxury-gold"></span>
+                        </div>
+                        
+                        <div class="space-y-6 mb-8">
+                            <div>
+                                <label class="block text-luxury-cream text-sm tracking-wider uppercase mb-3">Select Size</label>
+                                <div class="flex gap-3">
+                                    <button class="size-btn w-12 h-12 border border-luxury-gold/30 text-luxury-cream text-sm" onclick="selectSize(this)">XS</button>
+                                    <button class="size-btn w-12 h-12 border border-luxury-gold/30 text-luxury-cream text-sm" onclick="selectSize(this)">S</button>
+                                    <button class="size-btn w-12 h-12 border border-luxury-gold/30 text-luxury-cream text-sm active" onclick="selectSize(this)">M</button>
+                                    <button class="size-btn w-12 h-12 border border-luxury-gold/30 text-luxury-cream text-sm" onclick="selectSize(this)">L</button>
+                                    <button class="size-btn w-12 h-12 border border-luxury-gold/30 text-luxury-cream text-sm" onclick="selectSize(this)">XL</button>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-luxury-cream text-sm tracking-wider uppercase mb-3">Color</label>
+                                <div class="flex gap-3">
+                                    <button class="w-10 h-10 rounded-full bg-black border-2 border-luxury-gold ring-2 ring-luxury-gold ring-offset-2 ring-offset-luxury-charcoal"></button>
+                                    <button class="w-10 h-10 rounded-full bg-gray-800 border border-luxury-gold/30 hover:border-luxury-gold transition-colors"></button>
+                                    <button class="w-10 h-10 rounded-full bg-blue-900 border border-luxury-gold/30 hover:border-luxury-gold transition-colors"></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4 mb-8 text-luxury-muted text-sm leading-relaxed">
+                            <p>Handcrafted in Milan using the finest materials. Features include:</p>
+                            <ul class="list-disc list-inside space-y-1 ml-2">
+                                <li>Premium Italian wool blend</li>
+                                <li>Hand-stitched details</li>
+                                <li>Custom gold-plated hardware</li>
+                                <li>Bespoke lining with monogram</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-auto space-y-4">
+                            <button onclick="addToCart()" class="add-to-cart w-full py-4 bg-luxury-gold text-luxury-black font-semibold tracking-widest uppercase hover:bg-white transition-colors duration-300 relative overflow-hidden">
+                                Add to Cart
+                            </button>
+                            <button class="w-full py-4 border border-luxury-gold text-luxury-gold tracking-widest uppercase hover:bg-luxury-gold/10 transition-colors">
+                                Add to Wishlist
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize GSAP
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                gsap.to('#loader', {
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        document.getElementById('loader').style.display = 'none';
+                        initAnimations();
+                    }
+                });
+            }, 1500);
+        });
+        
+        // Custom Cursor
+        const cursorGlow = document.getElementById('cursorGlow');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.1;
+            cursorY += (mouseY - cursorY) * 0.1;
+            cursorGlow.style.left = cursorX + 'px';
+            cursorGlow.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollTop / docHeight;
+            document.getElementById('scrollProgress').style.transform = `scaleX(${scrollPercent})`;
+        });
+        
+        // Navigation scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            const navbar = document.getElementById('navbar');
+            
+            if (currentScroll > 100) {
+                navbar.classList.add('py-2');
+                navbar.classList.remove('py-4');
+            } else {
+                navbar.classList.add('py-4');
+                navbar.classList.remove('py-2');
+            }
+            
+            lastScroll = currentScroll;
+        });
+        
+        // Initialize Animations
+        function initAnimations() {
+            // Hero animations
+            const tl = gsap.timeline();
+            
+            tl.to('#heroSubtitle', {
+                y: 0,
+                duration: 1,
+                ease: 'power3.out'
+            })
+            .to('#heroTitle span span', {
+                y: 0,
+                duration: 1.2,
+                stagger: 0.2,
+                ease: 'power3.out'
+            }, '-=0.5')
+            .to('#heroTagline', {
+                y: 0,
+                duration: 1,
+                ease: 'power3.out'
+            }, '-=0.8')
+            .to('#heroCTA', {
+                opacity: 1,
+                duration: 1,
+                ease: 'power2.out'
+            }, '-=0.5');
+            
+            // Scroll animations
+            gsap.utils.toArray('.product-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    y: 100,
+                    opacity: 0,
+                    duration: 1,
+                    delay: i * 0.1,
+                    ease: 'power3.out'
+                });
+            });
+            
+            // Parallax
+            gsap.utils.toArray('.parallax-layer').forEach(layer => {
+                const speed = layer.dataset.speed || 0.5;
+                gsap.to(layer, {
+                    scrollTrigger: {
+                        trigger: layer,
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: true
+                    },
+                    y: 100 * speed,
+                    ease: 'none'
+                });
+            });
+        }
+        
+        // Three.js Hero Background
+        const heroCanvas = document.getElementById('heroCanvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: heroCanvas, alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        // Create floating particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+        
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 20;
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0xd4af37,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        
+        camera.position.z = 5;
+        
+        // Mouse interaction
+        let mouseXThree = 0;
+        let mouseYThree = 0;
+        
+        document.addEventListener('mousemove', (event) => {
+            mouseXThree = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseYThree = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+        
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            
+            particlesMesh.rotation.x += 0.0005;
+            particlesMesh.rotation.y += 0.0005;
+            
+            particlesMesh.rotation.x += mouseYThree * 0.0005;
+            particlesMesh.rotation.y += mouseXThree * 0.0005;
+            
+            renderer.render(scene, camera);
+        }
+        animateThree();
+        
+        // Product 3D Viewer (Simplified rotation simulation)
+        let productRotation = 0;
+        const productCanvas = document.getElementById('productCanvas');
+        const productCtx = productCanvas.getContext('2d');
+        
+        function resizeProductCanvas() {
+            productCanvas.width = productCanvas.offsetWidth;
+            productCanvas.height = productCanvas.offsetHeight;
+        }
+        resizeProductCanvas();
+        window.addEventListener('resize', resizeProductCanvas);
+        
+        function drawProduct() {
+            productCtx.clearRect(0, 0, productCanvas.width, productCanvas.height);
+            
+            const centerX = productCanvas.width / 2;
+            const centerY = productCanvas.height / 2;
+            
+            // Draw rotating frame
+            productCtx.save();
+            productCtx.translate(centerX, centerY);
+            productCtx.rotate(productRotation);
+            
+            // Draw luxury frame
+            productCtx.strokeStyle = '#d4af37';
+            productCtx.lineWidth = 2;
+            productCtx.beginPath();
+            productCtx.rect(-150, -200, 300, 400);
+            productCtx.stroke();
+            
+            // Draw diagonal lines
+            productCtx.beginPath();
+            productCtx.moveTo(-150, -200);
+            productCtx.lineTo(150, 200);
+            productCtx.moveTo(150, -200);
+            productCtx.lineTo(-150, 200);
+            productCtx.stroke();
+            
+            // Center text
+            productCtx.fillStyle = '#d4af37';
+            productCtx.font = 'italic 24px Cormorant Garamond';
+            productCtx.textAlign = 'center';
+            productCtx.fillText('3D Model View', 0, 0);
+            productCtx.fillText('Rotating...', 0, 30);
+            
+            productCtx.restore();
+            
+            requestAnimationFrame(drawProduct);
+        }
+        drawProduct();
+        
+        function rotateProduct(direction) {
+            if (direction === 'left') {
+                productRotation -= 0.2;
+            } else {
+                productRotation += 0.2;
+            }
+        }
+        
+        // Auto rotate
+        setInterval(() => {
+            productRotation += 0.01;
+        }, 50);
+        
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Cart functionality
+        let cart = [];
+        
+        function toggleCart() {
+            const overlay = document.getElementById('cartOverlay');
+            const drawer = overlay.querySelector('.cart-drawer');
+            const backdrop = overlay.querySelector('.absolute inset-0');
+            
+            if (overlay.classList.contains('pointer-events-none')) {
+                overlay.classList.remove('pointer-events-none');
+                drawer.classList.add('open');
+                backdrop.style.opacity = '1';
+            } else {
+                overlay.classList.add('pointer-events-none');
+                drawer.classList.remove('open');
+                backdrop.style.opacity = '0';
+            }
+        }
+        
+        function addToCart() {
+            const modal = document.getElementById('productModal');
+            const title = document.getElementById('modalTitle').textContent;
+            const price = document.getElementById('modalPrice').textContent;
+            const image = document.getElementById('modalImage').src;
+            
+            cart.push({ title, price, image });
+            updateCart();
+            closeProductModal();
+            
+            // Show success animation
+            const btn = document.querySelector('.add-to-cart');
+            const originalText = btn.textContent;
+            btn.textContent = 'Added!';
+            btn.style.background = '#fff';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 1500);
+        }
+        
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            cartCount.textContent = cart.length;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="text-center text-luxury-muted mt-20">
+                        <p class="font-serif text-lg italic">Your cart is empty</p>
+                        <p class="text-sm mt-2">Discover our latest collections</p>
+                    </div>
+                `;
+                cartTotal.textContent = '$0.00';
+            } else {
+                let total = 0;
+                cartItems.innerHTML = cart.map((item, index) => {
+                    const price = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+                    total += price;
+                    return `
+                        <div class="flex gap-4 mb-6 pb-6 border-b border-luxury-gold/10">
+                            <img src="${item.image}" class="w-20 h-24 object-cover" alt="${item.title}">
+                            <div class="flex-1">
+                                <h4 class="text-luxury-cream font-serif text-lg mb-1">${item.title}</h4>
+                                <p class="text-luxury-gold mb-2">${item.price}</p>
+                                <button onclick="removeFromCart(${index})" class="text-xs text-luxury-muted hover:text-red-400 transition-colors underline">Remove</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                cartTotal.textContent = '$' + total.toLocaleString() + '.00';
+            }
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+        
+        // Product Modal
+        function openProductModal(title, price, image) {
+            const modal = document.getElementById('productModal');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalPrice').textContent = '$' + price.toLocaleString();
+            document.getElementById('modalImage').src = image;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        
+        function selectSize(btn) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        
+        // Mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            if (menu.classList.contains('translate-x-full')) {
+                menu.classList.remove('translate-x-full');
+            } else {
+                menu.classList.add('translate-x-full');
+            }
+        }
+        
+        // Theme toggle
+        function toggleTheme() {
+            document.documentElement.classList.toggle('light');
+            // In a real implementation, this would toggle between dark and light modes
+        }
+        
+        // Newsletter
+        function handleSubscribe(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = 'Subscribed!';
+            btn.style.background = '#fff';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                e.target.reset();
+            }, 2000);
+        }
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
